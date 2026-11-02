@@ -1,0 +1,605 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ascendix Solution DNA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with a sticky contents rail on wide screens; genes styled as dye-lot tags */
+:root{
+  --bg:#f6f7fb; --surface:#ffffff; --ink:#18213a; --muted:#56607a; --line:#d9deea;
+  --indigo:#2a3f8f; --indigo-soft:#e6eaf7; --thread:#b07a12; --thread-soft:#f7eedb;
+  --warn:#9a3412; --warn-soft:#fdeee6; --code-bg:#eef1f8;
+  --f-display:"Noto Serif Bengali", "Nirmala UI", Georgia, serif;
+  --f-body:"Noto Sans Bengali", "Nirmala UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10141f; --surface:#171d2b; --ink:#e6e9f2; --muted:#a2abc2; --line:#2c3447;
+  --indigo:#9fb2ff; --indigo-soft:#1f2948; --thread:#e3b453; --thread-soft:#2e2615;
+  --warn:#ffb08a; --warn-soft:#38211a; --code-bg:#0c1019; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10141f; --surface:#171d2b; --ink:#e6e9f2; --muted:#a2abc2; --line:#2c3447;
+  --indigo:#9fb2ff; --indigo-soft:#1f2948; --thread:#e3b453; --thread-soft:#2e2615;
+  --warn:#ffb08a; --warn-soft:#38211a; --code-bg:#0c1019; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;padding-top:40px;font-size:14px}
+.toc p{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:4px;border-left:1px solid var(--line)}
+.toc a{display:block;padding:2px 0 2px 12px;color:var(--muted);text-decoration:none;line-height:1.5}
+.toc a:hover,.toc a:focus-visible{color:var(--indigo)}
+main{min-width:0;max-width:760px}
+header.top{padding-block:48px 28px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--thread);margin:0 0 12px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.35;color:var(--ink)}
+h1{font-size:clamp(30px,5vw,44px);margin:0 0 12px}
+.sub{font-size:18px;color:var(--muted);margin:0 0 20px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--muted);margin:0;padding:0;list-style:none}
+.meta b{color:var(--ink);font-weight:600}
+section{padding-block:36px 8px}
+h2{font-size:clamp(23px,3.2vw,29px);margin:0 0 14px}
+h3{font-size:19px;margin:28px 0 10px}
+p{margin:0 0 14px}
+a{color:var(--indigo)}
+.blank{background:var(--thread-soft);color:var(--thread);font-weight:600;padding:0 6px;border-radius:4px;white-space:nowrap}
+.alert{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);color:var(--ink);padding:16px 18px;border-radius:10px;margin:24px 0 0}
+.alert strong{color:var(--warn)}
+.dna-line{font-family:var(--f-display);font-size:clamp(19px,2.6vw,23px);line-height:1.6;margin:0 0 20px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px;padding:0;list-style:none}
+.flow li{font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--indigo-soft);color:var(--indigo)}
+.flow li.arrow{background:none;padding:0;color:var(--muted);font-weight:400}
+.flow li.loop{background:var(--thread-soft);color:var(--thread)}
+.tbl{overflow-x:auto;margin:8px 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-weight:600;background:var(--indigo-soft);color:var(--ink);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td:first-child{font-variant-numeric:tabular-nums}
+.gene{margin-top:28px}
+.tag{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;border-top:3px solid var(--indigo);padding-top:12px;margin-bottom:6px}
+.tag .lot{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--thread)}
+.tag h3{margin:0;font-size:21px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:10px 0 16px;font-size:15px}
+.rule b{color:var(--indigo)}
+ul,ol.list{margin:0 0 16px;padding-left:1.3em}
+li{margin:4px 0}
+.copy{position:relative;margin:10px 0 20px}
+.copy .head{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--muted);padding:8px 12px;background:var(--code-bg);border:1px solid var(--line);border-bottom:0;border-radius:10px 10px 0 0}
+.copy pre{margin:0;padding:14px 16px;background:var(--code-bg);border:1px solid var(--line);border-radius:0 0 10px 10px;overflow-x:auto;white-space:pre-wrap;font-family:var(--f-body);font-size:15px;line-height:1.7;color:var(--ink)}
+button.cp{font:inherit;font-size:12px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--indigo);padding:3px 10px;border-radius:6px}
+button.cp:focus-visible,a:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:8px 0 18px}
+.two > div{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:15px}
+.two h4{margin:0 0 6px;font-size:15px;color:var(--indigo)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:8px 0 18px;display:grid;gap:10px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:0}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-weight:500;color:var(--surface);background:var(--indigo);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="সূচিপত্র">
+  <p>সূচিপত্র</p>
+  <ol>
+    <li><a href="#dna">এক লাইনে DNA</a></li>
+    <li><a href="#map">Mentor থেকে Ascendix</a></li>
+    <li><a href="#genes">৯টি Gene</a></li>
+    <li><a href="#math">উল্টো হিসাব</a></li>
+    <li><a href="#gap">Website gap</a></li>
+    <li><a href="#roadmap">৯০ দিনের roadmap</a></li>
+    <li><a href="#copy">Copy-paste লেখা</a></li>
+    <li><a href="#honesty">সততার সীমারেখা</a></li>
+    <li><a href="#needed">যে তথ্য দরকার</a></li>
+    <li><a href="#next">পরবর্তী ৩টি পদক্ষেপ</a></li>
+    <li><a href="#notes">Department নোট</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <p class="eyebrow">Department: Strategy &amp; Management</p>
+  <h1>Ascendix Consulting: Final Solution DNA</h1>
+  <p class="sub">Organic Sales System: "From Thread to Trust" থেকে "factory owner নিজে এসে call book করেন"</p>
+  <ul class="meta">
+    <li><b>তারিখ:</b> ২ নভেম্বর ২০২৬</li>
+    <li><b>ভিত্তি:</b> Organic Sales Playbook, Course 8 (৪টি লেসন, ১০টি eBook)</li>
+    <li><b>Customer:</b> Ascendix Consulting</li>
+  </ul>
+  <p style="margin-top:14px;font-size:15px;color:var(--muted)">যেখানে সংখ্যা জানা নেই, সেখানে <span class="blank">[পূরণ করুন]</span> রাখা হয়েছে। কোনো fee, revenue বা conversion সংখ্যা অনুমান করে বসানো হয়নি।</p>
+  <div class="alert"><strong>জরুরি নোট:</strong> ২ নভেম্বর ২০২৬-এ live site ascendixbd.com খোলার চেষ্টা করা হয়েছিল। Domain-এর DNS খুঁজে পাওয়া যায়নি। তাই website-এর বিশ্লেষণ local copy থেকে করা। Domain ও hosting এখনই যাচাই করুন। Site খোলা না গেলে SEO, AEO ও conversion অংশ কাজই শুরু করতে পারবে না।</div>
+</header>
+
+<section id="dna">
+  <h2>এক লাইনে DNA</h2>
+  <p class="dna-line">Ascendix floor-এ যে proof তৈরি করে, সেটাকেই content বানায়। Content থেকে trust, trust থেকে conversation, conversation থেকে diagnostic, diagnostic থেকে engagement, আর প্রতিটি engagement থেকে নতুন proof।</p>
+  <ul class="flow" aria-label="Flywheel">
+    <li>Floor Proof</li><li class="arrow">→</li><li>Content</li><li class="arrow">→</li><li>Trust</li><li class="arrow">→</li><li>Conversation</li><li class="arrow">→</li><li>Diagnostic Call</li><li class="arrow">→</li><li>Engagement</li><li class="arrow">→</li><li class="loop">নতুন Floor Proof</li>
+  </ul>
+  <p>Paid ad নেই, spam নেই, cold message-এর বন্যা নেই। Mentor-এর ভাষায় এটা "ভাড়া বাড়ি" নয়, "নিজের বাড়ি": একবার গড়লে সময়ের সাথে মূল্য বাড়ে।</p>
+</section>
+
+<section id="map">
+  <h2>Mentor-এর Playbook থেকে Ascendix-এর DNA</h2>
+  <p>Mentor-এর playbook একজন AI practitioner-এর জন্য লেখা। Ascendix একটি industrial consultancy। নিচের table দেখায় ৯-ধাপের master roadmap-এর প্রতিটি ধাপ Ascendix-এ কী রূপ নেয়।</p>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Mentor-এর ধাপ</th><th>Mentor কী বলেন</th><th>Ascendix-এ এর রূপ</th></tr></thead>
+    <tbody>
+      <tr><td>১</td><td>Organic sales-এর দর্শন</td><td>এটা sprint নয়, marathon। দক্ষতাকে চুম্বক বানাও</td><td>২২+ বছরের floor অভিজ্ঞতাই চুম্বক। ৯০ দিনে ভিত্তি, ৬-১২ মাসে চাকা ঘোরে</td></tr>
+      <tr><td>২</td><td>Offer ও buyer আগে ঠিক করো</td><td>কী বেচছ, কাকে, কী ফল, কত দাম</td><td>৩টি engagement আগেই আছে। Fee ও "কার জন্য" আরও তীক্ষ্ণ করতে হবে</td></tr>
+      <tr><td>৩</td><td>Buyer research</td><td>ক্রেতার মুখের ভাষায় কথা বলো (ডাক্তারের উপমা)</td><td>"RFT optimisation" নয়, বলুন "বারবার re-dyeing", "শেড মিলছে না", "thread কেটে যাচ্ছে"</td></tr>
+      <tr><td>৪</td><td>Proof-ভিত্তিক content</td><td>খবর নয়, case study, সংখ্যা, screenshot</td><td>&lt;৫% breakage, ০.৩৬ ppm থেকে ND, ৩টি nomination: content-এর কাঁচামাল</td></tr>
+      <tr><td>৫</td><td>৩টি Trust Engine</td><td>Email list, community, সরাসরি কথা (DM)</td><td>"Floor Notes" email, textile engineer community, LinkedIn ও WhatsApp-এ নিজে reply</td></tr>
+      <tr><td>৬</td><td>সহজ SEO ও AEO</td><td>Google-কে "লাইব্রেরিয়ান" ভাবো, ১০টি জেতার মতো প্রশ্নের সেরা উত্তর দাও</td><td>Website-এ Knowledge Hub: re-dyeing, thread breakage, audit readiness-এর ১০টি প্রশ্ন</td></tr>
+      <tr><td>৭</td><td>Conversion bridge</td><td>Call book, DM, lead magnet, "Work with me" page</td><td>Free diagnostic call (calendar link), WhatsApp, Profit-Leak Self-Check, "Work with us"</td></tr>
+      <tr><td>৮</td><td>System, automation, scaling</td><td>সোমবার ২ ঘণ্টায় সপ্তাহের post, ১ case = ৭ asset, n8n</td><td>Form থেকে CRM, ২৪ ঘণ্টার reply alert, weekly KPI report। Founder-এর সময় বাঁচানো</td></tr>
+      <tr><td>৯</td><td>Revenue দিয়ে মাপো</td><td>Like নয়, conversation ও revenue। ৩০/৯০/১৮০ দিনের review</td><td>মাসিক sheet: qualified inquiry, diagnostic call, engagement, "আমাদের কীভাবে জানলেন?"</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="genes">
+  <h2>DNA-এর ৯টি Gene</h2>
+  <p>প্রতিটি gene mentor-এর একটি ধাপ। ক্রম গুরুত্বপূর্ণ: offer ঠিক না করে content শুরু করলে এমন audience জমবে যারা শুধু free টিপস চায়।</p>
+
+  <div class="gene" id="g1">
+    <div class="tag"><span class="lot">Gene 01 · Positioning</span><h3>পরিচয় ও Proof Positioning</h3></div>
+    <div class="rule"><b>Mentor-এর নিয়ম:</b> CV-র লাইন বা tool-এর নাম বিক্রি কোরো না। মাপা যায় এমন ফলাফল বিক্রি করো।</div>
+    <div class="copy"><div class="head"><span>Positioning statement</span><button class="cp" type="button">Copy</button></div><pre>Ascendix textile, yarn dyeing, sewing thread, denim ও RMG factory-কে
+hidden profit leak বন্ধ করতে এবং প্রমাণ দিয়ে global buyer-এর আস্থা অর্জন করতে সাহায্য করে।
+আমরা slide deck দিই না; আপনার নিজের fabric, seam ও machine-এ trial করে ফল দেখাই।</pre></div>
+    <div class="tbl"><table>
+      <thead><tr><th>CV লাইন (দুর্বল)</th><th>Outcome লাইন (শক্তিশালী)</th></tr></thead>
+      <tbody>
+        <tr><td>"২২ বছরের textile অভিজ্ঞতা"</td><td>"Heavy denim-এ sewing-thread breakage ৫%-এর নিচে নামিয়েছি, দামি thread না কিনে, spec ও machine setting ঠিক করে"</td></tr>
+        <tr><td>"Compliance expert"</td><td>"BESTSELLER-এর RSL test-এ 1,4-Dichlorobenzene ০.৩৬ ppm থেকে Non-Detectable, SGS ও Intertek-এ যাচাই করা"</td></tr>
+        <tr><td>"KPI management"</td><td>"KPI control দিয়ে production efficiency ৯০%+ উন্নতি"</td></tr>
+        <tr><td>"Buyer relationship"</td><td>"৩টি official brand nomination: H&amp;M, Kontoor Brands, BESTSELLER"</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>কোথায় বসাবেন:</b> LinkedIn headline ও About, website hero, proposal-এর প্রথম পাতা, WhatsApp business profile।</p>
+    <p><b>সততার সীমা:</b> Brand-এর নাম শুধু অর্জিত approval বোঝাতে। Nomination-এর guarantee কখনো নয়।</p>
+  </div>
+
+  <div class="gene" id="g2">
+    <div class="tag"><span class="lot">Gene 02 · Offer</span><h3>কী বিক্রি করি, কার কাছে, কী ফল, কত দাম</h3></div>
+    <div class="tbl"><table>
+      <thead><tr><th>প্রশ্ন</th><th>Ascendix-এর উত্তর</th></tr></thead>
+      <tbody>
+        <tr><td>১. কী বিক্রি করছি?</td><td>৩০ দিনের Operational Diagnostic ও Profit-Leak Audit; ৯০ দিনের Thread-to-Trust System™ Transformation (flagship); চলমান AI Automation ও Sourcing Retainer। প্রবেশদ্বার: free diagnostic call</td></tr>
+        <tr><td>২. কার জন্য?</td><td>Textile, yarn dyeing, sewing thread, denim ও RMG factory-র মালিক, MD ও leadership team, যাঁরা re-dyeing/rework-এ টাকা হারাচ্ছেন বা buyer audit ও nomination-এ আটকে আছেন। <span class="blank">[পূরণ করুন: factory-র ন্যূনতম আকার]</span></td></tr>
+        <tr><td>৩. কী ফল দিচ্ছি?</td><td>মাপা যায় এমন margin recovery: শুরুতে baseline KPI, শেষে একই KPI দিয়ে ফল। Audit-ready document, SOP, documented trial। Nomination-এর guarantee নয়</td></tr>
+        <tr><td>৪. দাম কত?</td><td>Diagnostic call: বিনামূল্যে। বাকি তিনটি: <span class="blank">[পূরণ করুন]</span>। দাম স্বচ্ছ ও আগে থেকে ঠিক থাকা দরকার</td></tr>
+      </tbody>
+    </table></div>
+    <h3>৩টি Persona দিয়ে offer যাচাই</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Persona</th><th>তাঁর আসল চিন্তা</th><th>কোন engagement দিয়ে শুরু</th></tr></thead>
+      <tbody>
+        <tr><td>Factory owner / MD</td><td>"Margin কমছে, buyer claim বাড়ছে, consultant-এ আগেও টাকা গেছে"</td><td>৩০ দিনের Diagnostic (কম ঝুঁকি, baseline দেখে সিদ্ধান্ত)</td></tr>
+        <tr><td>GM / Production Head</td><td>"Floor-এ আগুন নেভাতে দিন যায়, SOP নেই, লোক চলে গেলে সব শেষ"</td><td>Thread-to-Trust System™-এর Improve ও Enable ধাপ</td></tr>
+        <tr><td>Merchandising / Compliance lead</td><td>"Buyer audit, RSL test, document নিয়ে চাপ"</td><td>Deliver ধাপের audit-ready compliance pack</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="gene" id="g3">
+    <div class="tag"><span class="lot">Gene 03 · Buyer research</span><h3>ক্রেতার মনের ভাষা</h3></div>
+    <div class="rule"><b>ডাক্তারের উপমা:</b> ডাক্তার রোগীকে জটিল নাম বলেন না, বলেন "আপনার সর্দি লেগেছে।" Ascendix-কেও factory owner-এর মুখের ভাষায় কথা বলতে হবে।</div>
+    <div class="tbl"><table>
+      <thead><tr><th>আমাদের technical ভাষা</th><th>Owner-এর মুখের ভাষা (content-এ এটা লিখুন)</th></tr></thead>
+      <tbody>
+        <tr><td>Right-first-time (RFT) dyeing</td><td>"একই lot বারবার re-dye করতে হচ্ছে"</td></tr>
+        <tr><td>Lab-to-bulk shade deviation</td><td>"Lab-এ শেড মেলে, bulk-এ মেলে না"</td></tr>
+        <tr><td>Seam puckering, needle heat</td><td>"Denim-এ সেলাই কুঁচকে যাচ্ছে, thread কেটে যাচ্ছে"</td></tr>
+        <tr><td>Process capability, consistency</td><td>"Buyer বলছে batch-এ batch-এ মিল নেই"</td></tr>
+        <tr><td>RSL / COC compliance</td><td>"Test report-এ chemical ধরা পড়েছে, shipment আটকে আছে"</td></tr>
+        <tr><td>Knowledge retention, SOP</td><td>"ভালো manager চলে গেলেই সব আবার আগের মতো"</td></tr>
+      </tbody>
+    </table></div>
+    <h3>৫-প্রশ্নের Buyer Profile</h3>
+    <p>প্রতিটি diagnostic call-এ এবং ৫ জন পরিচিত owner-এর সাথে আলাপে জিজ্ঞেস করে লিখে রাখুন:</p>
+    <ol class="list">
+      <li><b>পদবি ও আকার:</b> factory-র ধরন, কর্মীসংখ্যা, সিদ্ধান্ত নেন কে?</li>
+      <li><b>এখনকার কষ্ট:</b> প্রতিদিন কোন সমস্যায় সবচেয়ে বেশি সময় ও টাকা যাচ্ছে?</li>
+      <li><b>সমাধান খোঁজেন কোথায়:</b> LinkedIn, Google, WhatsApp group, পরিচিত owner, buyer-এর technical team?</li>
+      <li><b>অতীতের ব্যর্থতা:</b> আগে কোন consultant বা সমাধান কাজ করেনি, কেন?</li>
+      <li><b>স্বপ্নের ফল:</b> কোন ফল পেলে তাঁরা খুশি মনে fee দেবেন?</li>
+    </ol>
+    <div class="rule"><b>Intent বনাম কৌতূহল:</b> "What is textile dyeing" প্রশ্নে traffic বেশি, ক্রেতা নেই। "How to reduce re-dyeing in yarn dyeing factory" প্রশ্নে traffic কম, কিন্তু প্রশ্নকর্তা সমস্যায় আছেন এবং সমাধান কিনতে প্রস্তুত। Ascendix শুধু দ্বিতীয় ধরনের প্রশ্নের পেছনে যাবে।</div>
+  </div>
+
+  <div class="gene" id="g4">
+    <div class="tag"><span class="lot">Gene 04 · Content engine</span><h3>কী লিখব, কোথায়, কত ঘন ঘন</h3></div>
+    <p><b>একটি platform-এ মনোযোগ:</b> LinkedIn। B2B consulting-এর জন্য এটাই mentor-এর প্রথম পরামর্শ, আর Ascendix-এর lead channel-ও LinkedIn। Home base: website-এর Knowledge Hub, যার মালিক আপনি নিজে। YouTube পরে।</p>
+    <h3>৫টি Content Pillar</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Pillar</th><th>বিষয়</th><th>উদাহরণ শিরোনাম</th></tr></thead>
+      <tbody>
+        <tr><td>Hidden profit leak</td><td>Re-dyeing, shade failure, changeover, downtime</td><td>"যে লোকসান আপনার MIS report-এ নেই: re-dyeing-এর আসল খরচ"</td></tr>
+        <tr><td>Seam ও thread failure</td><td>Breakage, puckering, skipped stitch</td><td>"দামি thread কেনার আগে এই ৩টি machine setting দেখুন"</td></tr>
+        <tr><td>Buyer audit ও nomination</td><td>Consistency, documentation, RSL</td><td>"Buyer আপনার factory-কে আপনার চোখে দেখে না"</td></tr>
+        <tr><td>মানুষ নয়, system</td><td>SOP, daily KPI, training</td><td>"Manager চলে গেলে দক্ষতাও চলে যায় কেন"</td></tr>
+        <tr><td>Capability থেকে proof</td><td>Factory trial, technical B2B sales</td><td>"দাম কমিয়ে নয়, trial data দিয়ে order জেতা"</td></tr>
+      </tbody>
+    </table></div>
+    <h3>৫টি পরীক্ষিত format</h3>
+    <ul>
+      <li><b>"আমি যেভাবে করেছি":</b> BESTSELLER RSL-এর root cause যাত্রা, ধাপে ধাপে</li>
+      <li><b>আগে বনাম পরে:</b> breakage, efficiency, re-dyeing-এর আগের ও পরের KPI</li>
+      <li><b>হাতে-কলমে how-to:</b> "Lab-to-bulk shade মেলানোর ৫টি control point"</li>
+      <li><b>"আমার করা ভুল":</b> floor-এ যে সিদ্ধান্ত ভুল প্রমাণিত হয়েছিল এবং কী শিখেছি</li>
+      <li><b>তুলনা:</b> "Thread বদলানো বনাম setting বদলানো: খরচ ও ফলের তুলনা"</li>
+    </ul>
+    <div class="two">
+      <div><h4>Cadence</h4>সপ্তাহে ২-৩টি ভালো post। ৬ মাস ধরে সপ্তাহে ৩টি শক্ত post, ১০টি দুর্বল post-এর চেয়ে অনেক বেশি কাজের।</div>
+      <div><h4>৮০/২০ অনুপাত</h4>৮০% নিঃস্বার্থ শিক্ষা ও সাহায্য, ২০% নরম offer। প্রতিটি post-এর শেষে কথা বলার একটি আমন্ত্রণ।</div>
+    </div>
+    <h3>১টি idea থেকে ৬টি touchpoint</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Touchpoint</th><th>উদাহরণ: "Heavy denim-এ thread breakage ৫%-এর নিচে, দামি thread ছাড়া"</th></tr></thead>
+      <tbody>
+        <tr><td>Home base</td><td>Website-এ বিস্তারিত article (সংখ্যা, ধাপ, ছবি)</td></tr>
+        <tr><td>Summary post</td><td>LinkedIn-এ মূল শিক্ষা ও ফল</td></tr>
+        <tr><td>Demo video</td><td>২ মিনিটের floor বা trial-room ভিডিও (শুধু client-এর লিখিত অনুমতিতে, অথবা নিজের lab-এ)</td></tr>
+        <tr><td>ধাপের post</td><td>"৪টি setting যা আমরা বদলেছিলাম"</td></tr>
+        <tr><td>Newsletter</td><td>Email list-এ পেছনের গল্প ও যা কাজ করেনি</td></tr>
+        <tr><td>Community উত্তর</td><td>Textile engineer-দের group বা Quora-তে ঠিক এই প্রশ্নের উত্তর</td></tr>
+      </tbody>
+    </table></div>
+    <p>Mentor-এর হিসাবে একটি শক্তিশালী case study থেকে প্রায় ৩০টি proof-ভিত্তিক post বানানো যায়। Ascendix-এর হাতে অন্তত তিনটি আছে: thread breakage, efficiency ৯০%+, BESTSELLER RSL।</p>
+  </div>
+
+  <div class="gene" id="g5">
+    <div class="tag"><span class="lot">Gene 05 · Trust engines</span><h3>Follower নয়, আস্থা</h3></div>
+    <p>১০,০০০ follower থাকলেও revenue শূন্য হতে পারে। Follower মানে মনোযোগ, client মানে আস্থা।</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Engine</th><th>Ascendix-এ কী করবেন</th><th>নিয়ম</th></tr></thead>
+      <tbody>
+        <tr><td>নিজস্ব Email list</td><td>মাসে ২ বার "Floor Notes from Ascendix": একটি সমস্যা, একটি সমাধান, একটি সংখ্যা। Brevo বা Mailchimp-এর free plan</td><td>মোবাইলে ১-২ scroll-এ শেষ। প্রথম subscriber থেকেই শুরু</td></tr>
+        <tr><td>Community</td><td>Textile engineer-দের group, BUTEX alumni network, LinkedIn-এর textile group</td><td>নতুন group-এ প্রথম ২ সপ্তাহ শুধু পড়ুন ও উত্তর দিন, pitch নয়</td></tr>
+        <tr><td>সরাসরি কথা (DM)</td><td>LinkedIn ও WhatsApp-এ নিজে reply। যিনি ৫টি post-এ নিয়মিত comment করেন, তাঁকে নরম DM</td><td>AI খসড়া লিখতে পারে, পাঠাবেন মানুষ</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Lead magnet</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Format</th><th>Ascendix lead magnet</th><th>কার জন্য</th></tr></thead>
+      <tbody>
+        <tr><td>১০-পয়েন্ট checklist</td><td><b>Five Hidden Profit Leaks: Factory Self-Check</b> (প্রথমে এটা)</td><td>Owner / MD</td></tr>
+        <tr><td>Mini tool</td><td>Re-dyeing Loss Calculator: lot সংখ্যা, re-dye হার, প্রতি lot-এর খরচ দিলে মাসিক লোকসান</td><td>Owner / GM</td></tr>
+        <tr><td>Short PDF guide</td><td>Heavy Denim Thread Breakage: ১০টি কারণ ও প্রথম পরীক্ষা</td><td>GM / Production</td></tr>
+        <tr><td>Checklist</td><td>Buyer Audit Readiness: ২০টি document যা auditor চাইবে</td><td>Compliance lead</td></tr>
+        <tr><td>Template</td><td>Daily KPI Report Template for Dyeing Floor</td><td>Supervisor / GM</td></tr>
+      </tbody>
+    </table></div>
+    <p>Lead magnet অবশ্যই paid offer-এর সিদ্ধান্তগ্রহীতাকে লক্ষ্য করবে। Chemical বা compliance বিষয়ের guide-এ লিখে দিন যে চূড়ান্ত সিদ্ধান্তের আগে accredited lab test দরকার।</p>
+  </div>
+
+  <div class="gene" id="g6">
+    <div class="tag"><span class="lot">Gene 06 · Discoverability</span><h3>সহজ SEO ও AEO</h3></div>
+    <div class="rule"><b>Google = লাইব্রেরিয়ান:</b> মানুষ প্রশ্ন করে, Google সেরা "বই" খুঁজে দেয়। বড় কোম্পানিকে বাজেটে হারানো যাবে না, কিন্তু floor-এর সত্যিকারের অভিজ্ঞতা দিয়ে উত্তরে হারানো যাবে।</div>
+    <h3>১০টি জেতার মতো প্রশ্ন (Knowledge Hub)</h3>
+    <ol class="list">
+      <li>How to reduce re-dyeing in a yarn dyeing factory</li>
+      <li>Why lab dip shade does not match bulk dyeing (and how to fix it)</li>
+      <li>Sewing thread breakage on heavy denim: causes and fixes</li>
+      <li>How to fix seam puckering on denim without changing thread</li>
+      <li>What KPIs should a yarn dyeing factory track daily</li>
+      <li>How to prepare a textile factory for a global brand technical audit</li>
+      <li>How to control 1,4-Dichlorobenzene in dyed yarn for RSL compliance</li>
+      <li>How to reduce rework in an RMG sewing line</li>
+      <li>How to write SOPs that survive staff turnover in a garment factory</li>
+      <li>How much does a textile manufacturing consultant cost in Bangladesh (প্রথম অনুচ্ছেদেই fee range লাগবে, তাই আগে fee <span class="blank">[পূরণ করুন]</span>)</li>
+    </ol>
+    <p>বাংলায়ও ৩-৪টি রাখুন, যেমন: "ডাইং ফ্যাক্টরিতে রি-ডাইং কমানোর উপায়", "ডেনিমে সুতা ছিঁড়ে যাওয়ার কারণ"।</p>
+    <h3>প্রতিটি article লেখার নিয়ম</h3>
+    <ul>
+      <li>প্রথম অনুচ্ছেদেই সরাসরি উত্তর, ইতিহাস পরে।</li>
+      <li>একই পাতায় পরের প্রশ্নগুলোর উত্তর: খরচ কীসের ওপর নির্ভর করে, কখন consultant দরকার নেই।</li>
+      <li>আসল সংখ্যা, ধাপ, ছবি। Client-এর তথ্য শুধু অনুমতিতে।</li>
+      <li>পরিষ্কার title, বোঝা যায় এমন heading, মানুষের ভাষা, এক article থেকে অন্যটিতে link।</li>
+      <li>প্রথম দিনেই Google Search Console চালু।</li>
+    </ul>
+    <h3>AEO: ChatGPT, Perplexity, Claude-এ উৎস হিসেবে আসা</h3>
+    <p>AI একটি site দেখে বিশ্বাস করে না। অনেক জায়গায় একই সত্য মিলে গেলে তবেই উৎস হিসেবে উল্লেখ করে।</p>
+    <div class="tbl"><table>
+      <thead><tr><th>AEO পদক্ষেপ</th><th>Ascendix-এ কী করবেন</th></tr></thead>
+      <tbody>
+        <tr><td>About page-এ উদ্ধৃতিযোগ্য দাবি</td><td>"Ascendix is a Dhaka-based consultancy for yarn dyeing, sewing thread and denim factories; founder holds 3 official brand nominations." এমন পরিষ্কার, যাচাইযোগ্য বাক্য</td></tr>
+        <tr><td>একাধিক জায়গায় একই সত্য</td><td>Website, LinkedIn, founder profile, YouTube বর্ণনা, community উত্তর: সব জায়গায় একই সংখ্যা ও ভাষা</td></tr>
+        <tr><td>Machine-readable লেখা</td><td>Heading, তুলনার table, ধাপের list। Thread-to-Trust System™-এর ৪ ধাপ table আকারে</td></tr>
+        <tr><td>ওপরের এক-তৃতীয়াংশে মূল তথ্য</td><td>মূল উত্তর ও সংখ্যা শুরুতেই</td></tr>
+        <tr><td>হাতে ট্র্যাক করা</td><td>প্রতি মাসে ChatGPT, Perplexity ও Claude-কে ১০টি প্রশ্ন জিজ্ঞেস করে দেখুন Ascendix-এর নাম আসে কি না। শুরুতে paid tool লাগবে না</td></tr>
+      </tbody>
+    </table></div>
+    <p>Mentor নিজেই বলেছেন এগুলো প্রবণতা, guarantee নয়। SEO ধীরে জ্বলা আগুন।</p>
+  </div>
+
+  <div class="gene" id="g7">
+    <div class="tag"><span class="lot">Gene 07 · Conversion</span><h3>Content থেকে conversation</h3></div>
+    <div class="rule"><b>সোনালি নিয়ম:</b> সরাসরি বিক্রির পেছনে নয়, অর্থপূর্ণ conversation বাড়ানোর পেছনে ছুটুন।</div>
+    <div class="tbl"><table>
+      <thead><tr><th>Bridge</th><th>এখন website-এ</th><th>কী করতে হবে</th></tr></thead>
+      <tbody>
+        <tr><td>Free call book</td><td>"Book a diagnostic" button আছে, কিন্তু form জমা দিলে email app খোলে</td><td>Cal.com বা Calendly link: visitor নিজেই সময় বেছে নেবেন</td></tr>
+        <tr><td>DM বা WhatsApp</td><td>WhatsApp নম্বর আছে</td><td>প্রতিটি post-এর শেষে নির্দিষ্ট কষ্টের উল্লেখ করে আমন্ত্রণ</td></tr>
+        <tr><td>Lead magnet</td><td>নেই</td><td>Five Hidden Profit Leaks Self-Check, email দিয়ে download</td></tr>
+        <tr><td>"Work with us" page</td><td>Contact অংশে ৩টি engagement আছে</td><td>আলাদা পাতা: কী দিই, কার জন্য, কীভাবে শুরু, প্রথম call-এ কী হবে</td></tr>
+      </tbody>
+    </table></div>
+    <h3>৩-ধাপের চাপহীন Pitch</h3>
+    <ol class="steps">
+      <li><div><b>ফল দিয়ে শুরু:</b> "একটি sewing-thread plant-এ heavy denim-এ breakage ৫%-এর নিচে নামিয়েছি, দামি thread না কিনে।"</div></li>
+      <li><div><b>সমস্যা স্বীকার:</b> "আপনার line-এ যদি re-dyeing বা thread breakage-এর কারণে shipment চাপে পড়ে…"</div></li>
+      <li><div><b>চাপহীন প্রস্তাব:</b> "প্রাসঙ্গিক মনে হলে একটি free diagnostic call-এ আপনার plant-এর বড় সমস্যাটি নিয়ে কথা বলতে পারি।"</div></li>
+    </ol>
+    <p>মিথ্যা urgency চলবে না। "এই মাসে মাত্র কয়েকটি slot" তখনই লিখবেন, যখন সেটা সত্য।</p>
+    <div class="rule"><b>Cold start প্রসঙ্গে:</b> Mentor নতুনদের প্রথম ২-৩ জন client-কে ছাড়ে কাজ করে proof জোগাড় করতে বলেন। Ascendix-এর এটা লাগবে না, কারণ ২২+ বছরের প্রমাণিত ফল আগেই আছে। Fee-তে যেকোনো ছাড় Founder-এর সিদ্ধান্ত। বরং প্রতিটি engagement-এর শুরুতেই case proof ব্যবহারের লিখিত অনুমতি চেয়ে রাখুন।</div>
+  </div>
+
+  <div class="gene" id="g8">
+    <div class="tag"><span class="lot">Gene 08 · Systems</span><h3>System, Automation ও Scaling</h3></div>
+    <p><b>সমস্যা:</b> Founder ছাড়া diagnosis, proposal বা সিদ্ধান্ত হয় না। Founder-এর সময়ই সবচেয়ে বড় bottleneck, আর inquiry-র follow-up দেরিতে হয়।</p>
+    <div class="tbl"><table>
+      <thead><tr><th>ভূমিকা</th><th>Mentor-এর নাম</th><th>Ascendix-এ দায়িত্ব</th></tr></thead>
+      <tbody>
+        <tr><td>Content</td><td>Marketing</td><td>Marketing দায়িত্বপ্রাপ্ত <span class="blank">[নাম]</span>। Founder শুধু কাঁচামাল দেবেন: সপ্তাহে ৩০ মিনিটের voice note বা floor-এর ঘটনা</td></tr>
+        <tr><td>Proposal</td><td>Account Executive</td><td>Business development <span class="blank">[নাম]</span>। Template থেকে খসড়া, Founder চূড়ান্ত করবেন</td></tr>
+        <tr><td>Inbox চ্যাট</td><td>Sales</td><td>২৪ ঘণ্টার মধ্যে প্রথম reply, মানুষ পাঠাবেন</td></tr>
+        <tr><td>Delivery</td><td>Customer Success</td><td>Founder ও associate বা field engineer</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Human-in-the-loop automation</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Automation</th><th>কী হবে</th><th>কেন</th></tr></thead>
+      <tbody>
+        <tr><td>Form থেকে CRM</td><td>Form জমা হলে Google Sheet, Notion বা Airtable-এ lead, আর দায়িত্বপ্রাপ্তের WhatsApp-এ alert</td><td>২৪ ঘণ্টার reply রক্ষা, warm lead ঠান্ডা হবে না</td></tr>
+        <tr><td>Welcome ও nurture email</td><td>Lead magnet নিলে ৩-৫ দিনের ছোট email ধারা</td><td>আস্থা গড়া, call-এর দিকে নরম আমন্ত্রণ</td></tr>
+        <tr><td>Content repurposing</td><td>Claude দিয়ে একটি article থেকে post ও newsletter-এর খসড়া</td><td>১ idea থেকে ৬ touchpoint, কম সময়ে</td></tr>
+        <tr><td>সোমবার ২ ঘণ্টা batching</td><td>সপ্তাহের ৩টি post schedule</td><td>বাকি সপ্তাহ client ও inbox-এ</td></tr>
+        <tr><td>Weekly KPI report</td><td>Client-এর জন্য automated KPI report</td><td>Retainer offer-এর প্রমাণ</td></tr>
+      </tbody>
+    </table></div>
+    <p>১০০% AI-তৈরি content নয়। Founder-এর অভিজ্ঞতা ও বিচার প্রতিটি post-এ থাকবে।</p>
+    <div class="rule"><b>আগুন ও জ্বালানি:</b> মাসে নিয়মিত ২-৩টি qualified inbound inquiry আসার আগে নতুন লোক নিয়োগ বা খরচ বাড়ানো নয়। আগুন জ্বললে তবেই জ্বালানি। Inquiry এর কম হলে offer, content বা buyer research-এ ঘাটতি আছে; আগে সেটা ঠিক করুন।</div>
+  </div>
+
+  <div class="gene" id="g9">
+    <div class="tag"><span class="lot">Gene 09 · Measurement</span><h3>পরিমাপ ও Review</h3></div>
+    <div class="two">
+      <div><h4>Vanity (অহংকার বাড়ায়)</h4>Follower, impression, like</div>
+      <div><h4>আসল (ব্যবসা চালায়)</h4>Qualified inquiry, শুরু হওয়া conversation, email subscriber, diagnostic call, proposal, paid engagement, revenue, retainer</div>
+    </div>
+    <h3>৩-অংশের Attribution</h3>
+    <ol class="list">
+      <li>প্রতিটি নতুন client-কে জিজ্ঞেস করুন: <b>"আমাদের সম্পর্কে প্রথম কীভাবে জানলেন?"</b> Website form-এও এই field যোগ করুন।</li>
+      <li>LinkedIn ও newsletter-এর link-এ UTM tag (Google-এর free Campaign URL Builder), website-এ Google Analytics।</li>
+      <li>মাসিক Google Sheet, নিচের ছকে।</li>
+    </ol>
+    <div class="tbl"><table>
+      <thead><tr><th>মাস</th><th>নতুন subscriber</th><th>Conversation</th><th>Qualified inquiry</th><th>Diagnostic call</th><th>Proposal</th><th>Paid engagement</th><th>Revenue</th><th>সেরা content</th></tr></thead>
+      <tbody>
+        <tr><td>নভেম্বর ২০২৬</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>ডিসেম্বর ২০২৬</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>জানুয়ারি ২০২৭</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table></div>
+    <h3>Review-এর ৩টি দিগন্ত</h3>
+    <ul>
+      <li><b>প্রতি মাসে ৫টি প্রশ্ন:</b> কোন content সবচেয়ে বেশি conversation এনেছে? কোনটা ব্যর্থ, কেন? জয়ী post-এর pattern কী? আয়ের লক্ষ্যের পথে আছি কি? আগামী মাসে মাত্র ১টি কী বদলাব?</li>
+      <li><b>৯০ দিনে:</b> revenue লক্ষ্য, content pillar ও platform নতুন করে মেলানো।</li>
+      <li><b>১৮০ দিনে:</b> মূল offer, target persona ও সবচেয়ে বড় bottleneck নতুন করে দেখা।</li>
+    </ul>
+  </div>
+</section>
+
+<section id="math">
+  <h2>উল্টো হিসাব: আয়ের লক্ষ্য থেকে কতজন মানুষ দরকার</h2>
+  <p>আগে মাসিক আয়ের লক্ষ্য, তারপর পেছন দিকে হিসাব। Ascendix-এর সংখ্যা এখনো নেই, তাই সূত্রটি ফাঁকা ঘরসহ।</p>
+  <div class="tbl"><table>
+    <thead><tr><th>ধাপ</th><th>সূত্র</th><th>Ascendix-এর সংখ্যা</th></tr></thead>
+    <tbody>
+      <tr><td>১. মাসিক revenue লক্ষ্য</td><td>Founder ঠিক করবেন</td><td><span class="blank">[পূরণ করুন]</span></td></tr>
+      <tr><td>২. গড় engagement fee</td><td>Service fee table থেকে</td><td><span class="blank">[পূরণ করুন]</span></td></tr>
+      <tr><td>৩. মাসে কয়টি paid engagement</td><td>ধাপ ১ ÷ ধাপ ২</td><td>হিসাব করুন</td></tr>
+      <tr><td>৪. Diagnostic call থেকে paid-এ conversion</td><td>গত ৬ মাসের data</td><td><span class="blank">[পূরণ করুন]</span></td></tr>
+      <tr><td>৫. মাসে কয়টি diagnostic call</td><td>ধাপ ৩ ÷ ধাপ ৪</td><td>হিসাব করুন</td></tr>
+      <tr><td>৬. Engaged মানুষ থেকে call-এর হার</td><td>Data না থাকলে mentor-এর উদাহরণ অনুপাত (১০ জনে ১ জন) দিয়ে শুরু করে পরীক্ষা করুন</td><td><span class="blank">[পূরণ করুন]</span></td></tr>
+      <tr><td>৭. কতজন নিয়মিত সক্রিয় পাঠক</td><td>ধাপ ৫ ÷ ধাপ ৬</td><td>হিসাব করুন</td></tr>
+    </tbody>
+  </table></div>
+  <p>পুরো social media দরকার নেই, অল্প কিছু সঠিক মানুষ যথেষ্ট। Ascendix-এর ক্ষেত্রে সঠিক মানুষ মানে factory owner, MD ও GM; সাধারণ textile ছাত্র বা চাকরিপ্রার্থী নয়।</p>
+</section>
+
+<section id="gap">
+  <h2>Website Gap বিশ্লেষণ</h2>
+  <p>Local copy অনুযায়ী।</p>
+  <div class="tbl"><table>
+    <thead><tr><th>বিষয়</th><th>এখন</th><th>যা দরকার</th><th>দায়িত্ব</th></tr></thead>
+    <tbody>
+      <tr><td>Domain live</td><td>DNS খুঁজে পাওয়া যায়নি (২ নভেম্বর ২০২৬)</td><td>Domain renewal ও hosting যাচাই</td><td>Website দায়িত্বপ্রাপ্ত</td></tr>
+      <tr><td>Hero ও positioning</td><td>শক্তিশালী: "From Thread to Trust", সমস্যা ও ৯০ দিনের system পরিষ্কার</td><td>রাখুন</td><td>—</td></tr>
+      <tr><td>Proof</td><td>সংখ্যা ও ৩টি নামহীন testimonial (confidentiality-র জন্য ঠিক আছে)</td><td>একটি পূর্ণ case study পাতা (BESTSELLER RSL, যা founder profile-এ আগেই public)</td><td>Marketing + Founder</td></tr>
+      <tr><td>Form</td><td>Email app খোলে, কোথাও জমা থাকে না</td><td>Form থেকে CRM, WhatsApp alert, "কীভাবে জানলেন?" field</td><td>AI automation দায়িত্বপ্রাপ্ত</td></tr>
+      <tr><td>Call booking</td><td>নেই</td><td>Calendar link</td><td>Business development</td></tr>
+      <tr><td>Lead magnet ও email list</td><td>নেই</td><td>Self-Check download ও newsletter sign-up</td><td>Marketing</td></tr>
+      <tr><td>Knowledge Hub</td><td>নেই</td><td>১০টি প্রশ্নের article</td><td>Marketing + Founder</td></tr>
+      <tr><td>SEO ভিত্তি</td><td>যাচাই হয়নি</td><td>Search Console, page title, meta description, About page-এ উদ্ধৃতিযোগ্য দাবি</td><td>Website দায়িত্বপ্রাপ্ত</td></tr>
+      <tr><td>Fee স্বচ্ছতা</td><td>নেই</td><td>"শুরু হয় ..." ধরনের range, অথবা fee কীসের ওপর নির্ভর করে তার ব্যাখ্যা</td><td>Founder</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="roadmap">
+  <h2>৯০ দিনের Roadmap</h2>
+  <p>৩ নভেম্বর ২০২৬ থেকে ১ ফেব্রুয়ারি ২০২৭।</p>
+  <div class="rule"><b>সৎ প্রত্যাশা:</b> প্রথম ১-২ মাসে post-এ খুব কম সাড়া আসাই স্বাভাবিক; এখানেই বেশিরভাগ মানুষ হাল ছাড়েন। ৩য়-৪র্থ মাসে আসল সংকেত দেখা যায়: না বলতেই share আর অচেনা মানুষের DM। চাকা ঘোরে ৬-১২ মাসে। তাই এই ৯০ দিন ভিত্তি গড়ার সময়, ফসল তোলার নয়।</div>
+  <div class="tbl"><table>
+    <thead><tr><th>পর্যায়</th><th>সময়</th><th>মূল কাজ</th><th>শেষে যা থাকবে</th></tr></thead>
+    <tbody>
+      <tr><td>১. ভিত্তি</td><td>সপ্তাহ ১-২<br>৩-১৬ নভেম্বর</td><td>Domain ও site যাচাই; fee ও revenue লক্ষ্য পূরণ; LinkedIn headline ও About-এ outcome লাইন; ৫ জন owner-এর সাথে ৫-প্রশ্নের আলাপ; Search Console; "কীভাবে জানলেন?" field</td><td>Live site, পূর্ণ offer, buyer-ভাষার তালিকা</td></tr>
+      <tr><td>২. Content Engine</td><td>সপ্তাহ ৩-৬<br>১৭ নভেম্বর-১৪ ডিসেম্বর</td><td>সপ্তাহে ৩টি LinkedIn post; প্রথম case study article; lead magnet #১; প্রথম newsletter</td><td>১২টি post, ১টি case study, email list চালু</td></tr>
+      <tr><td>৩. Trust ও খোঁজ</td><td>সপ্তাহ ৭-১০<br>১৫ ডিসেম্বর-১১ জানুয়ারি</td><td>Knowledge Hub-এ সপ্তাহে ১টি article (প্রথম ৪টি); community-তে নিয়মিত উত্তর; নরম DM; form থেকে CRM automation</td><td>৪টি SEO article, চালু automation, conversation-এর তালিকা</td></tr>
+      <tr><td>৪. Conversion ও Review</td><td>সপ্তাহ ১১-১৩<br>১২ জানুয়ারি-১ ফেব্রুয়ারি</td><td>Calendar link, "Work with us" পাতা; প্রথম AEO হাতে-যাচাই; ৯০ দিনের review</td><td>Review report ও পরের ৯০ দিনের ১টি প্রধান অগ্রাধিকার</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>মাসিক review-এর তারিখ:</b> ৩০ নভেম্বর, ৩১ ডিসেম্বর ২০২৬ এবং ৩১ জানুয়ারি ২০২৭।</p>
+  <h3>সাপ্তাহিক ছন্দ</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>দিন</th><th>কাজ</th></tr></thead>
+    <tbody>
+      <tr><td>সোমবার সকাল (২ ঘণ্টা)</td><td>সপ্তাহের ৩টি post schedule; গত সপ্তাহের inquiry দেখা</td></tr>
+      <tr><td>মঙ্গলবার</td><td>Post ১: proof বা case</td></tr>
+      <tr><td>বুধবার</td><td>Community-তে ৩০ মিনিট উত্তর</td></tr>
+      <tr><td>বৃহস্পতিবার</td><td>Post ২: how-to বা শিক্ষা</td></tr>
+      <tr><td>শনিবার</td><td>Post ৩: ভুল বা আগে-পরে</td></tr>
+      <tr><td>প্রতিদিন</td><td>২৪ ঘণ্টার মধ্যে সব inquiry ও DM-এর reply</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="copy">
+  <h2>Copy-paste করার মতো লেখা</h2>
+
+  <div class="copy"><div class="head"><span>LinkedIn post · factory owner-দের জন্য</span><button class="cp" type="button">Copy</button></div><pre>Factory buyer হারায় দামের জন্য না।
+হারায় এমন inconsistency-র জন্য, যার দায় কেউ নেয়নি।
+
+একটি sewing-thread plant-এ heavy denim-এ breakage ছিল বড় মাথাব্যথা।
+সবার প্রথম পরামর্শ ছিল: দামি thread কিনুন।
+
+আমরা thread বদলাইনি।
+বদলেছি thread specification আর machine setting।
+ফল: breakage ৫%-এর নিচে, আর buyer compliance পাস।
+
+শিক্ষা একটাই: নতুন কিছু কেনার আগে বর্তমান process মাপুন।
+
+আপনার line-এ কি thread breakage বা seam puckering-এর কারণে shipment চাপে পড়ছে?
+Comment-এ "THREAD" লিখুন বা সরাসরি message দিন। আমরা যে ৩টি setting প্রথমে দেখি, সেই checklist পাঠিয়ে দেব।</pre></div>
+
+  <div class="copy"><div class="head"><span>LinkedIn post · buyer ও international audience</span><button class="cp" type="button">Copy</button></div><pre>A buyer does not see your factory the way you see it.
+
+We saw strong machines and a capable lab.
+The buyer saw process control, testing and risk management.
+
+During a BESTSELLER RSL evaluation, 1,4-Dichlorobenzene came back at up to 0.36 ppm.
+We did not ask "pass or fail?" We asked what was driving the result.
+Root-cause work across raw materials, dyes, chemicals and process conditions,
+then repeated trials and third-party testing.
+
+Result: Non-Detectable, confirmed at SGS and Intertek.
+
+Approval is not a logo on a wall.
+It is proof that batch 400 will behave exactly like batch 1.
+
+If your factory is preparing for a technical audit, message me.
+I will share the five questions we ask before any buyer assessment.</pre></div>
+
+  <div class="copy"><div class="head"><span>নরম DM · নিয়মিত comment করেন এমন কাউকে</span><button class="cp" type="button">Copy</button></div><pre>আসসালামু আলাইকুম [নাম] ভাই/আপা,
+আমার কয়েকটি post-এ আপনার comment দেখেছি, ধন্যবাদ। আপনার floor-এর অভিজ্ঞতা থেকে লেখা মন্তব্যগুলো কাজের।
+জানতে আগ্রহী: এখন আপনার factory-তে সবচেয়ে বড় মাথাব্যথা কোনটা, re-dyeing, thread breakage, নাকি buyer audit?
+কোনো চাপ নেই, শুধু জানতে চাইছি। প্রাসঙ্গিক কিছু থাকলে শেয়ার করব।</pre></div>
+
+  <div class="copy"><div class="head"><span>Inquiry-র প্রথম reply · ২৪ ঘণ্টার মধ্যে</span><button class="cp" type="button">Copy</button></div><pre>[নাম] সাহেব,
+Ascendix-এ যোগাযোগের জন্য ধন্যবাদ। আপনি [সমস্যার উল্লেখ] নিয়ে লিখেছেন।
+একটি free diagnostic call-এ আমরা আপনার plant, product mix ও এই সমস্যাটি বুঝতে চাই, তারপর বলব কোন পথ আপনার জন্য ঠিক।
+আপনার সুবিধামতো সময় এখান থেকে বেছে নিন: [calendar link]
+অথবা WhatsApp-এ জানান: +880 1711 596439
+আপনার factory-র সব তথ্য গোপন থাকবে।
+— Md Shalim Sharder, Ascendix Consulting</pre></div>
+
+  <div class="copy"><div class="head"><span>Newsletter-এর প্রথম সংখ্যা · কাঠামো</span><button class="cp" type="button">Copy</button></div><pre>Floor Notes from Ascendix — সংখ্যা ১
+
+এই মাসের সমস্যা: Lab-এ শেড মেলে, bulk-এ মেলে না।
+কেন হয় (৩ লাইনে): ...
+প্রথমে যা পরীক্ষা করবেন (৩টি point): ...
+একটি সংখ্যা: ...
+আপনার প্রশ্ন থাকলে এই email-এর reply দিন। আমি নিজে পড়ি।</pre></div>
+
+  <div class="copy"><div class="head"><span>Website form-এ নতুন field</span><button class="cp" type="button">Copy</button></div><pre>How did you first hear about Ascendix?
+[ LinkedIn post ] [ Google search ] [ ChatGPT / AI assistant ] [ Referral from a factory owner ] [ WhatsApp group ] [ Event ] [ Other: ____ ]</pre></div>
+</section>
+
+<section id="honesty">
+  <h2>সততার সীমারেখা</h2>
+  <p>Mentor-এর No-FOMO নিয়ম আর Ascendix-এর সততার নীতি একসাথে।</p>
+  <div class="tbl"><table>
+    <thead><tr><th>কখনো নয়</th><th>বরং</th></tr></thead>
+    <tbody>
+      <tr><td>"Guaranteed nomination", "১০০% result"</td><td>"Process, proof ও audit-ready document"</td></tr>
+      <tr><td>মিথ্যা urgency, ভুয়া "শেষ slot"</td><td>চাপহীন আমন্ত্রণ</td></tr>
+      <tr><td>Client-এর নাম, recipe, cost বা buyer তথ্য অনুমতি ছাড়া</td><td>শুধু লিখিত অনুমতিতে, নয়তো নাম ছাড়া</td></tr>
+      <tr><td>বাড়িয়ে বলা সংখ্যা</td><td>শুধু যাচাই করা data</td></tr>
+      <tr><td>Brand-এর নামকে endorsement হিসেবে দেখানো</td><td>"Approvals obtained", trademark নোটসহ</td></tr>
+      <tr><td>AI bot দিয়ে DM-এর reply</td><td>AI খসড়া লেখে, মানুষ পাঠায়</td></tr>
+      <tr><td>Chemical বা compliance-এ চূড়ান্ত দাবি</td><td>"চূড়ান্ত সিদ্ধান্তের আগে accredited lab test দরকার"</td></tr>
+      <tr><td>Fee-তে নিজে থেকে ছাড়</td><td>Founder-এর কাছে escalate</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="needed">
+  <h2>যে তথ্য এখনো দরকার</h2>
+  <ol class="list">
+    <li>তিনটি engagement-এর fee ও payment শর্ত</li>
+    <li>মাসিক revenue লক্ষ্য ও গড় fee</li>
+    <li>গত কয়েক মাসের inquiry, diagnostic call ও engagement সংখ্যা (baseline)</li>
+    <li>Team-এর দায়িত্বপ্রাপ্তদের নাম (Marketing, BD, automation, associate)</li>
+    <li>ascendixbd.com-এর domain ও hosting অবস্থা</li>
+    <li>কোন case-এর নাম বা ফল public করার লিখিত অনুমতি আছে</li>
+    <li>বর্তমান LinkedIn follower ও post-এর সাড়া (শুধু শুরুর অবস্থা বোঝার জন্য)</li>
+  </ol>
+  <h3>সংক্ষিপ্ত ব্যাখ্যা</h3>
+  <p>Mentor-এর playbook-এর মূল কথা চারটি: offer আগে, ক্রেতার ভাষায় কথা, প্রমাণ দিয়ে আস্থা, আর like নয়, conversation ও revenue মাপা। Ascendix-এর সবচেয়ে বড় সুবিধা হলো, যে proof নতুনদের জোগাড় করতে হয়, সেটা আগেই আছে। ঘাটতি তিন জায়গায়: website-এ conversion-এর পথ দুর্বল, খুঁজে পাওয়ার ভিত্তি নেই (Knowledge Hub, SEO, email list), আর সবকিছু Founder-এর সময়ের ওপর নির্ভর করে। এই DNA তিনটিই ঠিক করে, Ascendix-এর সততার নীতি ভাঙা ছাড়া।</p>
+</section>
+
+<section id="next">
+  <h2>পরবর্তী ৩টি পদক্ষেপ</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>পদক্ষেপ</th><th>দায়িত্বপ্রাপ্ত</th><th>সময়সীমা</th></tr></thead>
+    <tbody>
+      <tr><td>১</td><td>Domain ও hosting যাচাই করে site live করা; Google Search Console চালু; form-এ "How did you first hear about Ascendix?" field</td><td>Website ও AI automation দায়িত্বপ্রাপ্ত <span class="blank">[নাম]</span></td><td>৯ নভেম্বর ২০২৬</td></tr>
+      <tr><td>২</td><td>তিনটি engagement-এর fee, payment শর্ত ও মাসিক revenue লক্ষ্য পূরণ; উল্টো হিসাব সম্পূর্ণ</td><td>Founder (Md Shalim Sharder)</td><td>৯ নভেম্বর ২০২৬</td></tr>
+      <tr><td>৩</td><td>প্রথম case study article এবং দুটি LinkedIn post প্রকাশ; সাপ্তাহিক ছন্দ শুরু</td><td>Founder (কাঁচামাল) + Marketing <span class="blank">[নাম]</span></td><td>১৬ নভেম্বর ২০২৬</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="notes">
+  <h2>অন্য department-এর জন্য নোট</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Department</th><th>নোট</th></tr></thead>
+    <tbody>
+      <tr><td>Marketing</td><td>Gene ৪, ৫, ৬ আপনার মূল কাজ। প্রথম lead magnet "Five Hidden Profit Leaks Self-Check" ৩০ নভেম্বরের মধ্যে</td></tr>
+      <tr><td>Sales</td><td>২৪ ঘণ্টার reply নিয়ম ও প্রথম reply-এর template। প্রতিটি call-এ ৫-প্রশ্নের buyer profile</td></tr>
+      <tr><td>Finance</td><td>উল্টো হিসাবের জন্য fee ও revenue সংখ্যা দরকার</td></tr>
+      <tr><td>Service Development</td><td>Re-dyeing Loss Calculator ছোট tool হিসেবে বানানোর পরিকল্পনা</td></tr>
+      <tr><td>Delivery Operations</td><td>প্রতিটি engagement-এর শুরুতে baseline KPI ও case proof-এর লিখিত অনুমতি</td></tr>
+      <tr><td>Administration</td><td>Case proof অনুমতিপত্রের template ও NDA প্রস্তুত। NDA ও আইনি প্রশ্ন Founder-এর কাছে escalate</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>Ascendix Consulting · From Thread to Trust · Strategy &amp; Management · ২ নভেম্বর ২০২৬</footer>
+</main>
+</div>
+
+<script>
+document.querySelectorAll('button.cp').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.closest('.copy').querySelector('pre');
+    var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function(){
+      var r = document.createRange(); r.selectNodeContents(pre);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected — press Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(pre.innerText).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+
+</body></html>
